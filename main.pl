@@ -1,4 +1,5 @@
 :- encoding(utf8).
+:- use_module("./board.pl").
 
 % Limpa o terminal
 limpar_tela :-
@@ -74,4 +75,5 @@ processar_opcao(5) :- centralizar('Saindo...'), nl.
 
 % Regra de partida
 main :-
-    menu_interativo(1).
+    menu_interativo(1),
+    board:show_board().
