@@ -51,7 +51,7 @@ display_menu(Opcao) :-
 display_opcao(Num, Num, Texto) :-
     atomic_list_concat(['> ', Texto, ' <'], TextoFormatado),
     centralizar(TextoFormatado).
-display_opcao(_, Num, Texto) :-
+display_opcao(_, _, Texto) :-
     centralizar(Texto).
 
 % Processa entrada do usuário
@@ -67,7 +67,7 @@ processar_navegacao(_, Opcao) :-
     menu_interativo(Opcao).
 
 % Processa a escolha do usuário
-processar_opcao(1) :- centralizar('Iniciando novo jogo...'), nl.
+processar_opcao(1) :- centralizar('Iniciando novo jogo...'), nl, board:imprimeTabuleiro('l').
 processar_opcao(2) :- centralizar('Carregando jogo salvo...'), nl.
 processar_opcao(3) :- centralizar('Exibindo histórico...'), nl.
 processar_opcao(4) :- centralizar('Mostrando tutorial...'), nl.
