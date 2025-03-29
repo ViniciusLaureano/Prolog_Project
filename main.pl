@@ -1,79 +1,90 @@
 :- encoding(utf8).
-:- use_module("./board.pl").
+:- use_module("./src/board.pl").
 
-% Limpa o terminal
-limpar_tela :-
+limparTela :-
     write('\e[H\e[J').
 
-% Obtém a largura do terminal dinamicamente (Unix-based systems)
-terminal_width(Width) :-
+terminalWidth(Width) :-
     setup_call_cleanup(
-        open(pipe('tput cols'), read, Stream),  % Usa o comando 'tput' para obter o número de colunas
-        read_line_to_codes(Stream, Codes),     % Lê a saída do comando
+        open(pipe('tput cols'), read, Stream),
+        read_line_to_codes(Stream, Codes),
         close(Stream)
     ),
     atom_codes(Atom, Codes),
     atom_number(Atom, Width).
 
-% Caso o comando tput não funcione, usa uma largura padrão
-terminal_width(Width) :-
-    Width is 80.  % Fallback caso a detecção falhe
+terminalWidth(Width) :-
+    Width is 80.
 
-% Centraliza um texto
-centralizar(Texto) :-
-    terminal_width(Width),
+terminalHeight(Height) :-
+    setup_call_cleanup(
+        open(pipe('tput lines'), read, Stream),
+        read_line_to_codes(Stream, Codes),
+        close(Stream)
+    ),
+    atom_codes(Atom, Codes),
+    atom_number(Atom, Height).
+
+terminalHeight(Height) :-
+    Height is 24.
+
+centralizarH(Texto) :-
+    terminalWidth(Width),
     string_length(Texto, Len),
-    Spaces is max(0, (Width - Len) // 2),   % Calcula a quantidade de espaços para centralizar
+    Spaces is max(0, (Width - Len) // 2),
     tab(Spaces), write(Texto), nl.
 
-% Exibe o menu interativo e permite navegação
-menu_interativo(Opcao) :-
-    limpar_tela,
-    nl, nl,
+
+centralizarV(Linhas) :-
+    terminalHeight(Height),
+    EmptyLines is max(0, (Height - Linhas) // 2),
+    forall(between(1, EmptyLines, _), nl).
+
+menuInterativo(Opcao) :-
+    limparTela,
+    centralizarV(10),
     display_menu(Opcao),
     get_single_char(Char),
-    processar_navegacao(Char, Opcao).
+    processarNavegacao(Char, Opcao).
 
-% Exibe o menu com a opção atual destacada
 display_menu(Opcao) :-
-    centralizar('========================'),
-    centralizar('   Nine Men\'s Morris   '),
-    centralizar('========================'),
-    display_opcao(1, Opcao, 'Novo Jogo'),
-    display_opcao(2, Opcao, 'Continue'),
-    display_opcao(3, Opcao, 'Histórico'),
-    display_opcao(4, Opcao, 'Tutorial'),
-    display_opcao(5, Opcao, 'Sair'),
-    centralizar('========================'),
-    centralizar('Use W para cima, S para baixo, Enter para selecionar.').
+    centralizarH('========================'),
+    centralizarH('   Nine Men\'s Morris   '),
+    centralizarH('========================'),
+    displayOpcao(1, Opcao, 'Novo Jogo'),
+    displayOpcao(2, Opcao, 'Continue'),
+    displayOpcao(3, Opcao, 'Histórico'),
+    displayOpcao(4, Opcao, 'Tutorial'),
+    displayOpcao(5, Opcao, 'Sair'),
+    centralizarH('========================'),
+    centralizarH('Use W para cima, S para baixo, Enter para selecionar.').
 
 % Destaca a opção selecionada
-display_opcao(Num, Num, Texto) :-
+displayOpcao(Num, Num, Texto) :-
     atomic_list_concat(['> ', Texto, ' <'], TextoFormatado),
-    centralizar(TextoFormatado).
-display_opcao(_, _, Texto) :-
-    centralizar(Texto).
+    centralizarH(TextoFormatado).
+displayOpcao(_, _, Texto) :-
+    centralizarH(Texto).
 
 % Processa entrada do usuário
-processar_navegacao(119, Opcao) :- % tecla 'w'
+processarNavegacao(119, Opcao) :- % tecla 'w'
     NovoOpcao is max(1, Opcao - 1),
-    menu_interativo(NovoOpcao).
-processar_navegacao(115, Opcao) :- % tecla 's'
+    menuInterativo(NovoOpcao).
+processarNavegacao(115, Opcao) :- % tecla 's'
     NovoOpcao is min(5, Opcao + 1),
-    menu_interativo(NovoOpcao).
-processar_navegacao(13, Opcao) :- % tecla Enter
-    processar_opcao(Opcao).
-processar_navegacao(_, Opcao) :-
-    menu_interativo(Opcao).
+    menuInterativo(NovoOpcao).
+processarNavegacao(13, Opcao) :- % tecla Enter
+    processarOpcao(Opcao).
+processarNavegacao(_, Opcao) :-
+    menuInterativo(Opcao).
 
 % Processa a escolha do usuário
-processar_opcao(1) :- centralizar('Iniciando novo jogo...'), nl, board:imprimeTabuleiro('l').
-processar_opcao(2) :- centralizar('Carregando jogo salvo...'), nl.
-processar_opcao(3) :- centralizar('Exibindo histórico...'), nl.
-processar_opcao(4) :- centralizar('Mostrando tutorial...'), nl.
-processar_opcao(5) :- centralizar('Saindo...'), nl.
+processarOpcao(1) :- centralizarH('Iniciando novo jogo...'), nl, board:imprimeTabuleiro('l'), menuInterativo(1).
+processarOpcao(2) :- centralizarH('Carregando jogo salvo...'), nl, menuInterativo(1).
+processarOpcao(3) :- centralizarH('Exibindo histórico...'), nl, menuInterativo(1).
+processarOpcao(4) :- centralizarH('Mostrando tutorial...'), nl, menuInterativo(1).
+processarOpcao(5) :- centralizarH('Saindo...'), halt.
 
 % Regra de partida
 main :-
-    menu_interativo(1),
-    board:show_board().
+    menuInterativo(1).
