@@ -5,11 +5,11 @@
 menuInterativo(Opcao) :-
     window:limparTela,
     window:centralizarV(10),
-    display_menu(Opcao),
+    displayMenu(Opcao),
     get_single_char(Char),
     processarNavegacao(Char, Opcao).
 
-display_menu(Opcao) :-
+displayMenu(Opcao) :-
     window:centralizarH('========================'),
     window:centralizarH('   Nine Men\'s Morris   '),
     window:centralizarH('========================'),
@@ -21,14 +21,12 @@ display_menu(Opcao) :-
     window:centralizarH('========================'),
     window:centralizarH('Use W para cima, S para baixo, Enter para selecionar.').
 
-% Destaca a opção selecionada
 displayOpcao(Num, Num, Texto) :-
     atomic_list_concat(['> ', Texto, ' <'], TextoFormatado),
     window:centralizarH(TextoFormatado).
 displayOpcao(_, _, Texto) :-
     window:centralizarH(Texto).
 
-% Processa entrada do usuário
 processarNavegacao(119, Opcao) :- % tecla 'w'
     NovoOpcao is max(1, Opcao - 1),
     menuInterativo(NovoOpcao).
@@ -41,10 +39,10 @@ processarNavegacao(_, Opcao) :-
     menuInterativo(Opcao).
 
 
-processarOpcao(1) :- window:centralizarH('Iniciando novo jogo...'), nl, board:imprimeTabuleiro('l'), menuInterativo(1).
-processarOpcao(2) :- window:centralizarH('Carregando jogo salvo...'), nl, menuInterativo(1).
-processarOpcao(3) :- window:centralizarH('Exibindo histórico...'), nl, menuInterativo(1).
-processarOpcao(4) :- window:centralizarH('Mostrando tutorial...'), nl, menuInterativo(1).
+processarOpcao(1) :- window:centralizarH('Iniciando novo jogo...'), menuInterativo(1).
+processarOpcao(2) :- window:centralizarH('Carregando jogo salvo...'), menuInterativo(1).
+processarOpcao(3) :- window:centralizarH('Exibindo histórico...'), menuInterativo(1).
+processarOpcao(4) :- window:centralizarH('Mostrando tutorial...'), menuInterativo(1).
 processarOpcao(5) :- window:centralizarH('Saindo...'), halt.
 
 
