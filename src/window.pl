@@ -45,3 +45,16 @@ centralizarInput(Prompt, Input) :-
     Spaces is max(0, (Width - Len) // 2),
     nl, tab(Spaces), write(Prompt), flush_output,
     read_line_to_string(user_input, Input).
+
+
+showGameData(TotRound, StageNum, Player, Player1, Player2) :-
+    format(atom(Stage), 'Fase ~w', [StageNum]),
+    format(atom(Rounds), 'Rodada: ~w', [TotRound]),
+
+    (Player =:= 1 -> CurrentPlayer = Player1 ; CurrentPlayer = Player2),
+
+    limparTela,
+
+    centralizarH(Rounds),
+    centralizarH(Stage),
+    centralizarH(CurrentPlayer).
