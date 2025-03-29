@@ -39,3 +39,9 @@ centralizarV(Linhas) :-
     EmptyLines is max(0, (Height - Linhas) // 2),
     forall(between(1, EmptyLines, _), nl).
 
+centralizarInput(Prompt, Input) :-
+    terminalWidth(Width),
+    string_length(Prompt, Len),
+    Spaces is max(0, (Width - Len) // 2),
+    nl, tab(Spaces), write(Prompt), flush_output,
+    read_line_to_string(user_input, Input).
