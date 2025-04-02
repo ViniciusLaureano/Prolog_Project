@@ -14,28 +14,33 @@ elemento_matriz(Matriz, X, Y, Elemento) :-
     nth0(X, Matriz, Linha),
     nth0(Y, Linha, Elemento).
 
+
 mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY) :-
     NX1 is X + DX,
     NY1 is Y + DY,
-    (   
-        elemento_matriz(Matriz, NX1, NY1, Elem) ->  
-        (   
-            Elem = (-1, -1) -> NX = X, NY = Y  % Bateu em (-1,-1), não se move
-        ;   
-            Elem = (1, 0) -> NX = NX1, NY = NY1  % Achou (1,0), para aqui
-        ;   
-            mover_ate_proximo(Matriz, NX1, NY1, DX, DY, NX, NY)  % Continua se movendo
-        )
-    ;   NX = X, NY = Y  % Saiu dos limites, não se move
-    ).
+    elemento_matriz(Matriz, NX1, NY1, Elem),
+    processa_elemento(Elem, Matriz, NX1, NY1, X, Y, DX, DY, NX, NY),
+    !.
+
+mover_ate_proximo(_, X, Y, _, _, X, Y).
+
+processa_elemento((-1, -1), _, _, _, X, Y, _, _, X, Y) :- !.
+
+processa_elemento((1, 0), _, NX1, NY1, _, _, _, _, NX1, NY1) :- !.
+
+processa_elemento(_, Matriz, NX1, NY1, X, Y, DX, DY, NX, NY) :- mover_ate_proximo(Matriz, NX1, NY1, DX, DY, NX, NY).
+
 
 move_cursor(Matriz, X, Y) :-
-    format("Cursor na posição (~w, ~w). Use W, A, S, D para mover:\n", [X, Y]),
     get_single_char(Input),
     char_code(Char, Input),
-    (   movimento(Char, (DX, DY)) -> 
-        mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY),
-        (X = NX, Y = NY -> write("Movimento inválido!\n"), move_cursor(Matriz, X, Y)  
-        ;   move_cursor(Matriz, NX, NY))
-    ;   write("Tecla inválida!\n"), move_cursor(Matriz, X, Y)
-    ).
+    processa_entrada(Char, Matriz, X, Y).
+
+processa_entrada(Input, Matriz, X, Y) :-
+    movimento(Input, (DX, DY)),
+    mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY),
+    move_cursor(Matriz, NX, NY),
+    !.
+
+processa_entrada(_, Matriz, X, Y) :-
+    move_cursor(Matriz, X, Y).
