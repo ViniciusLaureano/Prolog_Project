@@ -24,14 +24,12 @@ stage3(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
 
 
 stage1(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
-    %window:showGameData(TotRounds, 2, Player, P1, P2),
     %board:boardGenerate((1, 1), Matriz),
     %get_single_char(Input),
-    functions1:move_cursor(Matriz, 0, 0),
+    functions1:processa_jogada(Matriz, 0, 0, (TotRounds, 1, Player, P1, P2)),
     NewTotRounds is TotRounds + 1,
     (Player = 1 -> NovoPlayer is 2; NovoPlayer is 1),
     stage1(Matriz, NewTotRounds, (NovoPlayer, P1, P2), Mill, IsBot).
-
 
 
 stage2(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
