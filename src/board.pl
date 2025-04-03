@@ -9,26 +9,27 @@ boardGenerate((X, Y), Matriz) :-
 findPieces([], _, _).
 findPieces([H|T], I, J).
 
-drawPointer(X, Y).
+drawPointer(Y, X) :-
+    window:drawPiece(Y, X, 'X').
 
 boardBody() :-
     window:centralizarV(20),
-    window:centralizarH(" *━━━━━━━━━━━━━━━━━*━━━━━━━━━━━━━━━━━*"),
-    window:centralizarH(" ┃                 ┃                 ┃"),
-    window:centralizarH(" ┃                 ┃                 ┃"),
-    window:centralizarH(" ┃     *━━━━━━━━━━━*━━━━━━━━━━━*     ┃"),
-    window:centralizarH(" ┃     ┃           ┃           ┃     ┃"),
-    window:centralizarH(" ┃     ┃           ┃           ┃     ┃"),
-    window:centralizarH(" ┃     ┃     *━━━━━*━━━━━*     ┃     ┃"),
-    window:centralizarH(" ┃     ┃     ┃           ┃     ┃     ┃"),
-    window:centralizarH(" ┃     ┃     ┃           ┃     ┃     ┃"),
-    window:centralizarH(" *━━━━━*━━━━━*           *━━━━━*━━━━━*"),
-    window:centralizarH(" ┃     ┃     ┃           ┃     ┃     ┃"),
-    window:centralizarH(" ┃     ┃     ┃           ┃     ┃     ┃"),
-    window:centralizarH(" ┃     ┃     *━━━━━*━━━━━*     ┃     ┃"),
-    window:centralizarH(" ┃     ┃           ┃           ┃     ┃"),
-    window:centralizarH(" ┃     ┃           ┃           ┃     ┃"),
-    window:centralizarH(" ┃     *━━━━━━━━━━━*━━━━━━━━━━━*     ┃"),
-    window:centralizarH(" ┃                 ┃                 ┃"),
-    window:centralizarH(" ┃                 ┃                 ┃"),
-    window:centralizarH(" *━━━━━━━━━━━━━━━━━*━━━━━━━━━━━━━━━━━*").
+    window:centralizarH("*━━━━━━━━━━━━━━━━━*━━━━━━━━━━━━━━━━━*"),
+    window:centralizarH("┃                 ┃                 ┃"),
+    window:centralizarH("┃                 ┃                 ┃"),
+    window:centralizarH("┃     *━━━━━━━━━━━*━━━━━━━━━━━*     ┃"),
+    window:centralizarH("┃     ┃           ┃           ┃     ┃"),
+    window:centralizarH("┃     ┃           ┃           ┃     ┃"),
+    window:centralizarH("┃     ┃     *━━━━━*━━━━━*     ┃     ┃"),
+    window:centralizarH("┃     ┃     ┃           ┃     ┃     ┃"),
+    window:centralizarH("┃     ┃     ┃           ┃     ┃     ┃"),
+    window:centralizarH("*━━━━━*━━━━━*           *━━━━━*━━━━━*"),
+    window:centralizarH("┃     ┃     ┃           ┃     ┃     ┃"),
+    window:centralizarH("┃     ┃     ┃           ┃     ┃     ┃"),
+    window:centralizarH("┃     ┃     *━━━━━*━━━━━*     ┃     ┃"),
+    window:centralizarH("┃     ┃           ┃           ┃     ┃"),
+    window:centralizarH("┃     ┃           ┃           ┃     ┃"),
+    window:centralizarH("┃     *━━━━━━━━━━━*━━━━━━━━━━━*     ┃"),
+    window:centralizarH("┃                 ┃                 ┃"),
+    window:centralizarH("┃                 ┃                 ┃"),
+    window:centralizarH("*━━━━━━━━━━━━━━━━━*━━━━━━━━━━━━━━━━━*").
