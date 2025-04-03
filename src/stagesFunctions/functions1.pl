@@ -27,7 +27,7 @@ mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY) :-
 
 processa_elemento((-1, -1), _, _, _, X, Y, _, _, X, Y) :- !.
 
-processa_elemento((1, 0), _, NX1, NY1, _, _, _, _, NX1, NY1) :- !.
+processa_elemento((1, _), _, NX1, NY1, _, _, _, _, NX1, NY1) :- !.
 
 processa_elemento(_, Matriz, NX1, NY1, X, Y, DX, DY, NX, NY) :- mover_ate_proximo(Matriz, NX1, NY1, DX, DY, NX, NY).
 
