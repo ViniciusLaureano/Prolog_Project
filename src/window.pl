@@ -73,4 +73,4 @@ moveCursor(Row, Col) :-
 
 moveCursorEnd :-
     terminalHeight(Height),
-    moveCursor(Height, 1).
+    moveCursor(Height-2, 1).
