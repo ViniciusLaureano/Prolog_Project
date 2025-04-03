@@ -58,3 +58,19 @@ showGameData(TotRound, StageNum, Player, Player1, Player2) :-
     centralizarH(Rounds),
     centralizarH(Stage),
     centralizarH(CurrentPlayer).
+
+drawPiece(Y, X, Str) :-
+    terminalHeight(Height),
+    terminalWidth(Width),
+    PosX is ((Width - 36) // 2) + (X * 6),
+    PosY is 4 + ((Height - 20) // 2) + (Y * 3),
+    moveCursor(PosY, PosX),
+    write(Str),
+    moveCursorEnd.
+
+moveCursor(Row, Col) :-
+    format('\e[~d;~dH', [Row, Col]).
+
+moveCursorEnd :-
+    terminalHeight(Height),
+    moveCursor(Height, 1).
