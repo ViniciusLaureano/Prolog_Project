@@ -48,5 +48,4 @@ processa_entrada(_, _, X, Y, X, Y).
 processa_jogada(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2)) :-
     window:showGameData(TotRounds, StageNum, Player, P1, P2),
     board:boardGenerate((X, Y), Matriz),
-    format("Cursor na posição (~w, ~w). Use W, A, S, D para mover:\n", [X, Y]),
     move_cursor(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2)).
