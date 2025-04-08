@@ -1,6 +1,10 @@
 :- module(tutorial, []).
 :- use_module("./window.pl").
 :- use_module("./board.pl").
+:- use_module("./utils/matrizDefault.pl").
+
+
+
 startTutorial :-
     window:limparTela,
     start.
@@ -49,7 +53,7 @@ firstStep :-
         get_single_char(Direcao),
         (Direcao == 67 ->  
             window:limparTela,
-            upMove
+            upMove((2,4), matrizDefault:matriz)
         ;
         Direcao == 68 ->
             window:limparTela,
@@ -70,26 +74,29 @@ firstStep :-
 
 
 
-upMove:- 
+upMove((X, Y), Matriz):-
 window:centralizarH("W A S D será a sua movimentação durante o jogo"), 
 window:centralizarH("Teste apertando W pra mover o cursor para cima"), 
 window:centralizarH("➡ para avançar "), 
 window:centralizarH("⬅ para voltar "), 
 window:centralizarH("Digite 'q' para sair do tutorial"),
+board:boardGenerate((X, Y), Matriz),
+
+
 get_single_char(Code),
     (Code == 27 ->
         get_single_char(_),  
         get_single_char(Direcao),
         (Direcao == 67 ->  
             window:limparTela,
-            rightMove
+            rightMove((1, Y), Matriz)
         ;
         Direcao == 68 ->
             window:limparTela,
             firstStep
         ;
             window:limparTela,
-            upMove
+            upMove((X, Y), Matriz)
         )
         
     ;
@@ -97,16 +104,23 @@ get_single_char(Code),
         window:limparTela,
         !
     ;
+    Code == 119 ->
         window:limparTela,
-        upMove
+        upMove((1, Y), Matriz) 
+
+    ;
+        window:limparTela,
+        upMove((X, Y), Matriz)
     ).
 
 
-rightMove:- 
+rightMove((X, Y), Matriz):- 
 window:centralizarH("Aperte D para mover o cursor para a direita"), 
 window:centralizarH("➡ para avançar "), 
 window:centralizarH("⬅ para voltar "), 
 window:centralizarH("Digite 'q' para sair do tutorial"), 
+board:boardGenerate((X , Y), Matriz),
+
 
 get_single_char(Code),
     (Code == 27 ->
@@ -114,14 +128,14 @@ get_single_char(Code),
         get_single_char(Direcao),
         (Direcao == 67 ->  
             window:limparTela,
-            leftMove
+            leftMove((X, 5), Matriz)
         ;
         Direcao == 68 ->
             window:limparTela,
-            upMove
+            upMove((2, 4), Matriz)
         ;
             window:limparTela,
-            rightMove
+            rightMove((X, Y), Matriz)
         )
         
     ;
@@ -129,16 +143,21 @@ get_single_char(Code),
         window:limparTela,
         !
     ;
+    Code == 100 ->
         window:limparTela,
-        rightMove
+        rightMove((X, 5), Matriz)
+    ;
+        window:limparTela,
+        rightMove((X, Y), Matriz)
     ).
 
 
-leftMove:-
+leftMove((X, Y), Matriz):-
 window:centralizarH("Aperte A para mover o cursor para a esquerda"), 
 window:centralizarH("➡ para avançar "), 
 window:centralizarH("⬅ para voltar "), 
 window:centralizarH("Digite 'q' para sair do tutorial"), 
+board:boardGenerate((X, Y), Matriz),
 
 
 get_single_char(Code),
@@ -147,14 +166,14 @@ get_single_char(Code),
         get_single_char(Direcao),
         (Direcao == 67 ->  
             window:limparTela,
-            downMove
+            downMove((X, 4), Matriz)
         ;
         Direcao == 68 ->
             window:limparTela,
-            rightMove
+            rightMove((1, 4), Matriz)
         ;
             window:limparTela,
-            leftMove
+            leftMove((X, Y), Matriz)
         )
         
     ;
@@ -162,33 +181,37 @@ get_single_char(Code),
         window:limparTela,
         !
     ;
+    Code == 97 ->
         window:limparTela,
-        leftMove
+        leftMove((X, 4), Matriz)
+    ;
+        window:limparTela,
+        leftMove((X, Y), Matriz)
     ).
 
 
 
 
-downMove:-   
+downMove((X, Y), Matriz):-   
 window:centralizarH("Aperte S para mover o cursor para baixo"), 
 window:centralizarH("➡ para avançar "), 
 window:centralizarH("⬅ para voltar "), 
 window:centralizarH("Digite 'q' para sair do tutorial"), 
+board:boardGenerate((X, Y), Matriz),
 
 get_single_char(Code),
     (Code == 27 ->
         get_single_char(_),  
         get_single_char(Direcao),
         (Direcao == 67 ->  
-            window:limparTela,
-            makeMove
+            window:limparTela
         ;
-        Direcao == 68 ->
+        Direcao == 68 -> 
             window:limparTela,
-            leftMove
+            leftMove((1, 5), Matriz)
         ;
             window:limparTela,
-            downMove
+            downMove(2, Y)
         )
         
     ;
@@ -196,8 +219,12 @@ get_single_char(Code),
         window:limparTela,
         !
     ;
+    Code == 115 ->
         window:limparTela,
-        downMove
+        downMove((2, Y), Matriz)
+    ;
+        window:limparTela,
+        downMove((X, Y), Matriz)
     ).
 
 
