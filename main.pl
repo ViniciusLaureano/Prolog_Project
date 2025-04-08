@@ -2,6 +2,7 @@
 :- use_module("./src/board.pl").
 :- use_module("./src/window.pl").
 :- use_module("./src/newGame.pl").
+:- use_module("./src/tutorial.pl").
 
 menuInterativo(Opcao) :-
     window:limparTela,
@@ -43,7 +44,7 @@ processarNavegacao(_, Opcao) :-
 processarOpcao(1) :- window:centralizarH('Iniciando novo jogo...'), newGame:startNewGame, menuInterativo(1).
 processarOpcao(2) :- window:centralizarH('Carregando jogo salvo...'), menuInterativo(1).
 processarOpcao(3) :- window:centralizarH('Exibindo histórico...'), menuInterativo(1).
-processarOpcao(4) :- window:centralizarH('Mostrando tutorial...'), menuInterativo(1).
+processarOpcao(4) :- window:centralizarH('Mostrando tutorial...'), tutorial:startTutorial, menuInterativo(1).
 processarOpcao(5) :- window:centralizarH('Saindo...'), halt.
 
 
