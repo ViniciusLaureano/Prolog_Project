@@ -1,3 +1,7 @@
 :- module(finishGame, []).
+:- use_module("./src/history.pl").
 
-finishGame(Matriz, TotRounds, (Player, P1, P2), IsBot).
+saveGameToHistory(Matrix, TotRounds, (Player, P1, P2), IsBot) :- 
+    saveFinalGame(Matrix, TotRounds, Player, (P1, P2), IsBot).
+
+
