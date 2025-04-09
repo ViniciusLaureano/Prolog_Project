@@ -2,6 +2,8 @@
 :- use_module("./src/board.pl").
 :- use_module("./src/window.pl").
 :- use_module("./src/newGame.pl").
+:- use_module("./src/history.pl").
+:- use_module("./src/continue.pl").
 :- use_module("./src/tutorial.pl").
 
 menuInterativo(Opcao) :-
@@ -31,18 +33,18 @@ displayOpcao(_, _, Texto) :-
 
 processarNavegacao(119, Opcao) :- % tecla 'w'
     NovoOpcao is max(1, Opcao - 1),
-    menuInterativo(NovoOpcao).
+    menuInterativo(NovoOpcao), !.
 processarNavegacao(115, Opcao) :- % tecla 's'
     NovoOpcao is min(5, Opcao + 1),
-    menuInterativo(NovoOpcao).
+    menuInterativo(NovoOpcao), !.
 processarNavegacao(13, Opcao) :- % tecla Enter
-    processarOpcao(Opcao).
+    processarOpcao(Opcao), !.
 processarNavegacao(_, Opcao) :-
-    menuInterativo(Opcao).
+    menuInterativo(Opcao), !.
 
 
 processarOpcao(1) :- window:centralizarH('Iniciando novo jogo...'), newGame:startNewGame, menuInterativo(1).
-processarOpcao(2) :- window:centralizarH('Carregando jogo salvo...'), menuInterativo(1).
+processarOpcao(2) :- window:centralizarH('Carregando jogo salvo...'), continue:continueGame, menuInterativo(1).
 processarOpcao(3) :- window:centralizarH('Exibindo histórico...'), menuInterativo(1).
 processarOpcao(4) :- window:centralizarH('Mostrando tutorial...'), tutorial:startTutorial, menuInterativo(1).
 processarOpcao(5) :- window:centralizarH('Saindo...'), halt.

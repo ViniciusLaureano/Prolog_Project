@@ -50,6 +50,8 @@ processa_entrada(Input, Matriz, X, Y, NX, NY, Matriz, _, continuar) :-
     mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY),
     !.
 
+processa_entrada(q, Matriz, X, Y, X, Y, Matriz, _, stop).
+
 processa_entrada(_, Matriz, X, Y, X, Y, Matriz, _, continuar).
 
 processa_jogada(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, Resultado, FX, FY) :-
@@ -66,7 +68,9 @@ processa_jogada(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz,
             NovaMatriz = Matriz1,
             Resultado = marcou,
             FX = X,
-            FY = Y
+            FY = Y;
+        Resultado1 = stop ->
+            Resultado = stop
     ).
 
 formou_moinho(Matriz, Player, X, Y) :-
