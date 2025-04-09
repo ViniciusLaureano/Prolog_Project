@@ -128,17 +128,22 @@ adversario(2, 1).
 
 processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz) :-
     adversario(Player, Adversario),
+    elemento_matriz(Matriz, X, Y, Elemento),
     window:showGameData(TotRounds, StageNum, Player, P1, P2),
     board:boardGenerate((X, Y), Matriz, 4),
     get_single_char(Input),
     char_code(Char, Input),
     (
         movimento(Char, (DX, DY)) ->
-            mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY),
-            processa_remocao(Matriz, NX, NY, (TotRounds, StageNum, Player, P1, P2), NovaMatriz)
-        ;
-        Char = 'c' ->
-            elemento_matriz(Matriz, X, Y, (1, Adversario)),
+            ( mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY),
+              (NX \= X ; NY \= Y) -> 
+                processa_remocao(Matriz, NX, NY, (TotRounds, StageNum, Player, P1, P2), NovaMatriz)
+              ;
+                processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz)
+            )
+
+        ; Char = 'c',
+          Elemento = (1, Adversario) ->
             (
                 \+ formou_moinho(Matriz, Adversario, X, Y) ->
                     substituir_elemento(Matriz, X, Y, (1, 0), NovaMatriz)
@@ -151,8 +156,7 @@ processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz
                             processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz)
                     )
             )
-        ;
-            processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz)
+        ; processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz)
     ).
 
 moinho([
