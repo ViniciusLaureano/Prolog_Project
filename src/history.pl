@@ -1,5 +1,6 @@
 :- module(history, []).
 :- use_module(library(http/json)).
+:- use_module("./src/continue.pl").
 
 
 read_history(File, []) :- exists_file(File), !.
@@ -17,7 +18,8 @@ append_history(NewState, File) :-
     close(Stream).
 
 saveFinalGame(Matrix, TotRounds, Winner, (P1, P2), IsBot) :-
-    buildFinalState(Matrix, TotRounds, Winner, (P1, P2), Stage, Mill, IsBot, State),
+    continue:matrix_to_json(Matrix, FormatedMatrix),
+    buildFinalState(FormatedMatrix, TotRounds, Winner, (P1, P2), IsBot, State),
     append_history(State, "./src/json/saveHistory.json").
 
 buildFinalState(Matrix, TotRounds, Winner, (P1, P2), IsBot, State) :-

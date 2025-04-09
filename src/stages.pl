@@ -2,6 +2,7 @@
 
 :- use_module("./src/board.pl").
 :- use_module("./src/window.pl").
+:- use_module("./src/history.pl").
 :- use_module("./src/validations.pl").
 :- use_module("./stagesFunctions/functions1.pl").
 :- use_module("./stagesFunctions/functions2.pl").
@@ -19,7 +20,7 @@ stage2(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
 
 stage3(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
     validations:validateStage3(Matriz, Winner),
-    finishGame:saveFinalGame(Matriz, TotRounds, Winner, (P1, P2), IsBot), !.
+    history:saveFinalGame(Matriz, TotRounds, Winner, (P1, P2), IsBot), !.
 
 
 
