@@ -54,5 +54,5 @@ stage2(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
 
 stage3(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
     window:showGameData(TotRounds, 3, Player, P1, P2),
-    board:boardGenerate((1, 1), Matriz),
+    board:boardGenerate((1, 1), Matriz, 4),
     get_single_char(Input).

@@ -59,11 +59,11 @@ showGameData(TotRound, StageNum, Player, Player1, Player2) :-
     centralizarH(Stage),
     centralizarH(CurrentPlayer).
 
-drawPiece(Y, X, Str) :-
+drawPiece(Y, X, Str, ExtraLines) :-
     terminalHeight(Height),
     terminalWidth(Width),
     PosX is ((Width - 36) // 2) + (X * 6),
-    PosY is 4 + ((Height - 20) // 2) + (Y * 3),
+    PosY is ExtraLines + ((Height - 20) // 2) + (Y * 3),
     moveCursor(PosY, PosX),
     write(Str),
     moveCursorEnd.

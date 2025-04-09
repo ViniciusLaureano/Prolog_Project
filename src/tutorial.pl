@@ -53,7 +53,7 @@ firstStep :-
         get_single_char(Direcao),
         (Direcao == 67 ->  
             window:limparTela,
-            upMove((2,4), matrizDefault:matriz)
+            upMove((4,2), matrizDefault:matriz)
         ;
         Direcao == 68 ->
             window:limparTela,
@@ -80,7 +80,7 @@ window:centralizarH("Teste apertando W pra mover o cursor para cima"),
 window:centralizarH("➡ para avançar "), 
 window:centralizarH("⬅ para voltar "), 
 window:centralizarH("Digite 'q' para sair do tutorial"),
-board:boardGenerate((X, Y), Matriz),
+board:boardGenerate((X, Y), Matriz, 6),
 
 
 get_single_char(Code),
@@ -106,7 +106,7 @@ get_single_char(Code),
     ;
     Code == 119 ->
         window:limparTela,
-        upMove((1, Y), Matriz) 
+        upMove((3, 2), Matriz) 
 
     ;
         window:limparTela,
@@ -119,7 +119,7 @@ window:centralizarH("Aperte D para mover o cursor para a direita"),
 window:centralizarH("➡ para avançar "), 
 window:centralizarH("⬅ para voltar "), 
 window:centralizarH("Digite 'q' para sair do tutorial"), 
-board:boardGenerate((X , Y), Matriz),
+board:boardGenerate((X , Y), Matriz, 5),
 
 
 get_single_char(Code),
@@ -132,7 +132,7 @@ get_single_char(Code),
         ;
         Direcao == 68 ->
             window:limparTela,
-            upMove((2, 4), Matriz)
+            upMove((4,2), Matriz)
         ;
             window:limparTela,
             rightMove((X, Y), Matriz)
@@ -157,7 +157,7 @@ window:centralizarH("Aperte A para mover o cursor para a esquerda"),
 window:centralizarH("➡ para avançar "), 
 window:centralizarH("⬅ para voltar "), 
 window:centralizarH("Digite 'q' para sair do tutorial"), 
-board:boardGenerate((X, Y), Matriz),
+board:boardGenerate((X, Y), Matriz, 5),
 
 
 get_single_char(Code),
@@ -197,7 +197,7 @@ window:centralizarH("Aperte S para mover o cursor para baixo"),
 window:centralizarH("➡ para avançar "), 
 window:centralizarH("⬅ para voltar "), 
 window:centralizarH("Digite 'q' para sair do tutorial"), 
-board:boardGenerate((X, Y), Matriz),
+board:boardGenerate((X, Y), Matriz, 5),
 
 get_single_char(Code),
     (Code == 27 ->

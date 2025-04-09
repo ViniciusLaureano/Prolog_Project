@@ -1,10 +1,10 @@
 :- module(board, []).
 :- use_module("./src/window.pl").
 
-boardGenerate((X, Y), Matriz) :-
+boardGenerate((X, Y), Matriz, ExtraLines) :-
     boardBody,
     findPieces(Matriz),
-    drawPointer(X, Y).
+    drawPointer(X, Y, ExtraLines).
 
 findPieces(Matriz) :-
     findCellsWithValue(Matriz, 1, Result1),
@@ -14,12 +14,12 @@ findPieces(Matriz) :-
     
 iterateDrawPiece([], _).
 iterateDrawPiece([(X, Y)|T], Player) :-
-    window:drawPiece(X, Y, Player),
+    window:drawPiece(X, Y, Player, 4),
     iterateDrawPiece(T, Player).
 
 
-drawPointer(X, Y) :-
-    window:drawPiece(X, Y, 'X').
+drawPointer(X, Y, ExtraLines) :-
+    window:drawPiece(X, Y, 'X', ExtraLines).
 
 findCellsWithValue(Matriz, X, Result) :-
     findall((RowAjust, ColAjust), (nth1(Row, Matriz, Linha), nth1(Col, Linha, (1, X)), RowAjust is Row - 1, ColAjust is Col - 1), Result).

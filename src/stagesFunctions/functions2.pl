@@ -95,7 +95,7 @@ adjacente((6,6), (6,3)).
 
 processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho) :-
     window:showGameData(TotRounds, StageNum, Player, P1, P2),
-    board:boardGenerate((X, Y), Matriz),
+    board:boardGenerate((X, Y), Matriz, 4),
     get_single_char(Input),
     char_code(Char, Input),
     (
@@ -135,7 +135,7 @@ selecionar_destino(Matriz, OrigX, OrigY, (TotRounds, StageNum, Player, P1, P2), 
 loop_destino(Matriz, OrigX, OrigY, (TotRounds, StageNum, Player, P1, P2), Possiveis, I, Estado, NovaMatriz, Resultado, FX, FY) :-
     nth0(I, Possiveis, (X, Y)),
     window:showGameData(TotRounds, StageNum, Player, P1, P2),
-    board:boardGenerate((X, Y), Matriz),
+    board:boardGenerate((X, Y), Matriz, 4),
     get_single_char(Input),
     char_code(Char, Input),
     length(Possiveis, Len),

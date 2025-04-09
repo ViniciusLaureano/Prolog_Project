@@ -54,7 +54,7 @@ processa_entrada(_, Matriz, X, Y, X, Y, Matriz, _, continuar).
 
 processa_jogada(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, Resultado, FX, FY) :-
     window:showGameData(TotRounds, StageNum, Player, P1, P2),
-    board:boardGenerate((X, Y), Matriz),
+    board:boardGenerate((X, Y), Matriz, 4),
     get_single_char(Input),
     char_code(Char, Input),
     processa_entrada(Char, Matriz, X, Y, NX, NY, Matriz1, Player, Resultado1),
@@ -125,7 +125,7 @@ adversario(2, 1).
 processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz) :-
     adversario(Player, Adversario),
     window:showGameData(TotRounds, StageNum, Player, P1, P2),
-    board:boardGenerate((X, Y), Matriz),
+    board:boardGenerate((X, Y), Matriz, 4),
     get_single_char(Input),
     char_code(Char, Input),
     (
