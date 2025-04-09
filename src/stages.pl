@@ -18,8 +18,8 @@ stage2(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
 
 
 stage3(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
-    validations:validateStage3(Matriz),
-    finishGame:saveFinalGame(Matriz, TotRounds, Player, (P1, P2), IsBot), !.
+    validations:validateStage3(Matriz, Winner),
+    finishGame:saveFinalGame(Matriz, TotRounds, Winner, (P1, P2), IsBot), !.
 
 
 

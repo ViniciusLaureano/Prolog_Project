@@ -6,11 +6,11 @@ validateStage2(Matriz, Player) :-
     playerPieces(Matriz, Player, TotPieces),
     TotPieces =< 3.
 
-validateStage3(Matriz) :- 
+validateStage3(Matriz, 2) :- 
     playerPieces(Matriz, 1, TotPieces),
     TotPieces =:= 2.
 
-validateStage3(Matriz) :- 
+validateStage3(Matriz, 1) :- 
     playerPieces(Matriz, 2, TotPieces),
     TotPieces =:= 2.
 
