@@ -1,9 +1,9 @@
 :- module(stages, []).
 
-:- use_module("./src/validations.pl").
-:- use_module("./src/finishGame.pl").
-:- use_module("./src/window.pl").
 :- use_module("./src/board.pl").
+:- use_module("./src/window.pl").
+:- use_module("./src/finishGame.pl").
+:- use_module("./src/validations.pl").
 :- use_module("./stagesFunctions/functions1.pl").
 :- use_module("./stagesFunctions/functions2.pl").
 :- use_module("./stagesFunctions/functions3.pl").
@@ -20,8 +20,7 @@ stage2(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
 
 stage3(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
     validations:validateStage3(Matriz),
-    finishGame:finishGame(Matriz, TotRounds, (Player, P1, P2), IsBot), !.
-
+    finishGame:saveFinalGame(Matriz, TotRounds, Player, (P1, P2), IsBot), !.
 
 
 
