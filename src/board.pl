@@ -3,20 +3,21 @@
 
 boardGenerate((X, Y), Matriz, ExtraLines) :-
     boardBody,
-    findPieces(Matriz),
+    findPieces(Matriz, ExtraLines),
     drawPointer(X, Y, ExtraLines).
 
-findPieces(Matriz) :-
+findPieces(Matriz, ExtraLines) :-
     findCellsWithValue(Matriz, 1, Result1),
     findCellsWithValue(Matriz, 2, Result2),
-    iterateDrawPiece(Result1, 1),
-    iterateDrawPiece(Result2, 2).
+    iterateDrawPiece(Result1, 1, ExtraLines),
+    iterateDrawPiece(Result2, 2, ExtraLines).
     
-iterateDrawPiece([], _).
-iterateDrawPiece([(X, Y)|T], Player) :-
-    window:drawPiece(X, Y, Player, 4),
-    iterateDrawPiece(T, Player).
+iterateDrawPiece([], _, _).
+iterateDrawPiece([(X, Y)|T], Player, ExtraLines) :-
+    window:drawPiece(X, Y, Player, ExtraLines),
+    iterateDrawPiece(T, Player, ExtraLines).
 
+drawPointer(-9999, -9999, _) :- !.
 
 drawPointer(X, Y, ExtraLines) :-
     window:drawPiece(X, Y, 'X', ExtraLines).
