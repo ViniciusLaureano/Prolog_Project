@@ -48,20 +48,24 @@ stage2(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
 stage2(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
     functions2:processa_jogada_stage2(Matriz, 0, 0, (TotRounds, 2, Player, P1, P2), _, NovaMatriz, Resultado, X, Y, _, IsBot),
    	(
-        		(
+		Resultado = stop ->
+        continue:saveInterruptedGame(Matriz, TotRounds, (Player, P1, P2), "Phase2", Mill, IsBot),
+        !
+        ;
+    (
 			% Casos com IsBot = true
 			( IsBot = true, Resultado = marcou, Player = 2, functions1:formou_moinho(NovaMatriz, Player, X, Y) ->
-				functions1:remover_peca(NovaMatriz, (TotRounds, 1, Player, P1, P2), FinalMatriz, true)
+				functions1:remover_peca(NovaMatriz, (TotRounds, 2, Player, P1, P2), FinalMatriz, true)
 			;
 			( IsBot = true, Resultado = marcou, Player = 1, functions1:formou_moinho(NovaMatriz, Player, X, Y) ->
-				functions1:remover_peca(NovaMatriz, (TotRounds, 1, Player, P1, P2), FinalMatriz, false)
+				functions1:remover_peca(NovaMatriz, (TotRounds, 2, Player, P1, P2), FinalMatriz, false)
 			;
 			% Casos com IsBot = false
 			( IsBot = false, Resultado = marcou, Player = 2, functions1:formou_moinho(NovaMatriz, Player, X, Y) ->
-				functions1:remover_peca(NovaMatriz, (TotRounds, 1, Player, P1, P2), FinalMatriz, false)
+				functions1:remover_peca(NovaMatriz, (TotRounds, 2, Player, P1, P2), FinalMatriz, false)
 			;
 			( IsBot = false, Resultado = marcou, Player = 1, functions1:formou_moinho(NovaMatriz, Player, X, Y) ->
-				functions1:remover_peca(NovaMatriz, (TotRounds, 1, Player, P1, P2), FinalMatriz, false)
+				functions1:remover_peca(NovaMatriz, (TotRounds, 2, Player, P1, P2), FinalMatriz, false)
 			;
 				FinalMatriz = NovaMatriz
 			))))
@@ -79,20 +83,24 @@ stage3(Matriz, TotRounds, (_, P1, P2), _, IsBot) :-
 stage3(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
     functions3:processa_jogada_stage3(Matriz, 0, 0, (TotRounds, 3, Player, P1, P2), _, NovaMatriz, Resultado, X, Y, _, IsBot),
     (
+		Resultado = stop ->
+        continue:saveInterruptedGame(Matriz, TotRounds, (Player, P1, P2), "Phase3", Mill, IsBot),
+        !
+        ;
         (
 			% Casos com IsBot = true
 			( IsBot = true, Resultado = marcou, Player = 2, functions1:formou_moinho(NovaMatriz, Player, X, Y) ->
-				functions1:remover_peca(NovaMatriz, (TotRounds, 1, Player, P1, P2), FinalMatriz, true)
+				functions1:remover_peca(NovaMatriz, (TotRounds, 3, Player, P1, P2), FinalMatriz, true)
 			;
 			( IsBot = true, Resultado = marcou, Player = 1, functions1:formou_moinho(NovaMatriz, Player, X, Y) ->
-				functions1:remover_peca(NovaMatriz, (TotRounds, 1, Player, P1, P2), FinalMatriz, false)
+				functions1:remover_peca(NovaMatriz, (TotRounds, 3, Player, P1, P2), FinalMatriz, false)
 			;
 			% Casos com IsBot = false
 			( IsBot = false, Resultado = marcou, Player = 2, functions1:formou_moinho(NovaMatriz, Player, X, Y) ->
-				functions1:remover_peca(NovaMatriz, (TotRounds, 1, Player, P1, P2), FinalMatriz, false)
+				functions1:remover_peca(NovaMatriz, (TotRounds, 3, Player, P1, P2), FinalMatriz, false)
 			;
 			( IsBot = false, Resultado = marcou, Player = 1, functions1:formou_moinho(NovaMatriz, Player, X, Y) ->
-				functions1:remover_peca(NovaMatriz, (TotRounds, 1, Player, P1, P2), FinalMatriz, false)
+				functions1:remover_peca(NovaMatriz, (TotRounds, 3, Player, P1, P2), FinalMatriz, false)
 			;
 				FinalMatriz = NovaMatriz
 			))))

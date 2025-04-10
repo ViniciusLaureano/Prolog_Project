@@ -117,34 +117,45 @@ possui_movimento(Matriz, (X, Y)) :-
 processa_jogada_stage2(Matriz, _, _, (_, _, 2, _, _), _, NovaMatriz, Resultado, FX, FY, FormouMoinho, true) :-
     bot_jogada_stage2(Matriz, 2, NovaMatriz, Resultado, FX, FY, FormouMoinho), !.
 
-processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho, IsBot) :-
+processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, Resultado, FX, FY, FormouMoinho, IsBot) :-
     window:showGameData(TotRounds, StageNum, Player, P1, P2),
     board:boardGenerate((X, Y), Matriz, 4),
     get_single_char(Input),
     char_code(Char, Input),
     (
+        Char = 'q' ->
+            Resultado = stop,
+            NovaMatriz = Matriz,
+            FX = X,
+            FY = Y,
+            FormouMoinho = false
+    ;
         functions1:movimento(Char, (DX, DY)) ->
             ( functions1:mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY),
                (NX \= X ; NY \= Y) ->
-            processa_jogada_stage2(Matriz, NX, NY, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho, IsBot)
-        ;
-            processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho, IsBot)
+                processa_jogada_stage2(Matriz, NX, NY, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, Resultado, FX, FY, FormouMoinho, IsBot)
+            ;
+                processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, Resultado, FX, FY, FormouMoinho, IsBot)
             )
     ;
         Char = 'c' ->
-            functions1:elemento_matriz(Matriz, X, Y, (1, Player)),
-            selecionar_destino(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, MatrizMovida, ResultadoMov, MX, MY),
-            (
-                ResultadoMov = marcou ->
-                    (functions1:formou_moinho(MatrizMovida, Player, MX, MY) -> FormouMoinho = true ; FormouMoinho = false),
-                    NovaMatriz = MatrizMovida,
-                    FX = MX,
-                    FY = MY
-                ;
-                    processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho, IsBot)
+            ( functions1:elemento_matriz(Matriz, X, Y, (1, Player)) ->
+                selecionar_destino(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, MatrizMovida, ResultadoMov, MX, MY),
+                (
+                    ResultadoMov = marcou ->
+                        ( functions1:formou_moinho(MatrizMovida, Player, MX, MY) -> FormouMoinho = true ; FormouMoinho = false ),
+                        NovaMatriz = MatrizMovida,
+                        Resultado = marcou,
+                        FX = MX,
+                        FY = MY
+                    ;
+                        processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, Resultado, FX, FY, FormouMoinho, IsBot)
+                )
+            ;
+                processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, Resultado, FX, FY, FormouMoinho, IsBot)
             )
-        ;
-            processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho, IsBot)
+    ;
+        processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, Resultado, FX, FY, FormouMoinho, IsBot)
     ).
 
 
