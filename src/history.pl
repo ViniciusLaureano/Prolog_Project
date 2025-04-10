@@ -56,6 +56,7 @@ mostrar_jogos([Jogo | Resto], Index) :-
 	Jogo.players = [P1, P2],
 	TotRounds = Jogo.totRounds,
   Matrix = Jogo.matrix,
+  Winner = Jogo.winner,
   continue:matrix_from_json(Matrix, FormatedMatrix),
   ( Winner = 1 -> Vencedor = P1 ; Vencedor = P2 ),
 	format(atom(Mensagem1), "Game #~d", [Index]),
