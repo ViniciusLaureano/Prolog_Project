@@ -10,8 +10,12 @@ processa_jogada_stage3(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Esta
     char_code(Char, Input),
     (
         functions1:movimento(Char, (DX, DY)) ->
-            functions1:mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY),
-            processa_jogada_stage3(Matriz, NX, NY, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho)
+            ( functions1:mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY),
+              (NX \= X ; NY \= Y) ->
+                processa_jogada_stage3(Matriz, NX, NY, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho)
+            ;
+                processa_jogada_stage3(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho)
+            )
         ;
         Char = 'c' ->
             functions1:elemento_matriz(Matriz, X, Y, (1, Player)),

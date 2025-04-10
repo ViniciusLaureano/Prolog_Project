@@ -3,7 +3,6 @@
 :- use_module("./src/board.pl").
 :- use_module("./src/window.pl").
 
-% adjacente((X, Y), (NX, NY)) significa que (NX, NY) é adjacente a (X, Y)
 adjacente((0,3), (0,0)).
 adjacente((0,3), (0,6)).
 adjacente((0,3), (1,3)).
@@ -100,9 +99,13 @@ processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Esta
     char_code(Char, Input),
     (
         functions1:movimento(Char, (DX, DY)) ->
-            functions1:mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY),
+            ( functions1:mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY),
+               (NX \= X ; NY \= Y) ->
             processa_jogada_stage2(Matriz, NX, NY, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho)
         ;
+            processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho)
+            )
+    ;
         Char = 'c' ->
             functions1:elemento_matriz(Matriz, X, Y, (1, Player)),
             selecionar_destino(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, MatrizMovida, ResultadoMov, MX, MY),
