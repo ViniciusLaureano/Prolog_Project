@@ -114,7 +114,7 @@ possui_movimento(Matriz, (X, Y)) :-
     adjacente((X, Y), (AX, AY)),
     functions1:elemento_matriz(Matriz, AX, AY, (1, 0)).
 
-processa_jogada_stage2(Matriz, _, _, (TotRounds, StageNum, 2, P1, P2), Estado, NovaMatriz, Resultado, FX, FY, FormouMoinho, true) :-
+processa_jogada_stage2(Matriz, _, _, (_, _, 2, _, _), _, NovaMatriz, Resultado, FX, FY, FormouMoinho, true) :-
     bot_jogada_stage2(Matriz, 2, NovaMatriz, Resultado, FX, FY, FormouMoinho), !.
 
 processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho, IsBot) :-

@@ -43,7 +43,7 @@ bot_jogada_stage3(Matriz, _, _, Player, NovaMatriz, marcou, FX, FY, FormouMoinho
     )).
 
 
-processa_jogada_stage3(Matriz, X, Y, (TotRounds, StageNum, 2, P1, P2), Estado, NovaMatriz, Resultado, FX, FY, FormouMoinho, true) :-
+processa_jogada_stage3(Matriz, X, Y, (_, _, 2, _, _), _, NovaMatriz, Resultado, FX, FY, FormouMoinho, true) :-
     bot_jogada_stage3(Matriz, X, Y, 2, NovaMatriz, Resultado, FX, FY, FormouMoinho), !.
 
 processa_jogada_stage3(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho, IsBot) :-

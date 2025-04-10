@@ -38,7 +38,7 @@ mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY) :-
 
 processa_elemento((-1, -1), _, _, _, X, Y, _, _, X, Y) :- !.
 processa_elemento((1, _), _, NX1, NY1, _, _, _, _, NX1, NY1) :- !.
-processa_elemento(_, Matriz, NX1, NY1, X, Y, DX, DY, NX, NY) :-
+processa_elemento(_, Matriz, NX1, NY1, _, _, DX, DY, NX, NY) :-
     mover_ate_proximo(Matriz, NX1, NY1, DX, DY, NX, NY).
 
 % Processa tecla pressionada
@@ -138,7 +138,7 @@ escolher_posicao_para_remover([(X,Y)|_], X, Y).
 adversario(1, 2).
 adversario(2, 1).
 
-processa_remocao(Matriz, _, _, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, true) :-
+processa_remocao(Matriz, _, _, (_, _, Player, _, _), NovaMatriz, true) :-
     bot:bot_jogando(Player, IsBot),
     IsBot == true,
     bot:remover_peca_bot(Matriz, Player, NovaMatriz), !.

@@ -12,18 +12,6 @@ stage1(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
     validations:validateStage1(TotRounds),
     stage2(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot), !.
 
-
-stage2(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
-    validations:validateStage2(Matriz, Player),
-    stage3(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot), !.
-
-
-stage3(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
-    validations:validateStage3(Matriz, Winner),
-    history:saveFinalGame(Matriz, TotRounds, Winner, (P1, P2), IsBot), !.
-
-
-
 stage1(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
 	functions1:processa_jogada(Matriz, 0, 0, (TotRounds, 1, Player, P1, P2), NovaMatriz, Resultado, X, Y, IsBot),
 	(Resultado = stop ->
@@ -54,7 +42,11 @@ stage1(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
 	).
 
 stage2(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
-    functions2:processa_jogada_stage2(Matriz, 0, 0, (TotRounds, 2, Player, P1, P2), Estado, NovaMatriz, Resultado, X, Y, FormouMoinho, IsBot),
+    validations:validateStage2(Matriz, Player),
+    stage3(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot), !.
+
+stage2(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
+    functions2:processa_jogada_stage2(Matriz, 0, 0, (TotRounds, 2, Player, P1, P2), _, NovaMatriz, Resultado, X, Y, _, IsBot),
    	(
         		(
 			% Casos com IsBot = true
@@ -80,8 +72,12 @@ stage2(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
 	).
 
 
+stage3(Matriz, TotRounds, (_, P1, P2), _, IsBot) :-
+    validations:validateStage3(Matriz, Winner),
+    history:saveFinalGame(Matriz, TotRounds, Winner, (P1, P2), IsBot), !.
+
 stage3(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
-    functions3:processa_jogada_stage3(Matriz, 0, 0, (TotRounds, 3, Player, P1, P2), Estado, NovaMatriz, Resultado, X, Y, FormouMoinho, IsBot),
+    functions3:processa_jogada_stage3(Matriz, 0, 0, (TotRounds, 3, Player, P1, P2), _, NovaMatriz, Resultado, X, Y, _, IsBot),
     (
         (
 			% Casos com IsBot = true
@@ -105,4 +101,3 @@ stage3(Matriz, TotRounds, (Player, P1, P2), Mill, IsBot) :-
 		(Player = 1 -> NovoPlayer is 2 ; NovoPlayer is 1),
 		stage3(FinalMatriz, NewTotRounds, (NovoPlayer, P1, P2), Mill, IsBot)
 	).
-

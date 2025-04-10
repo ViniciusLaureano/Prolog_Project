@@ -3,7 +3,7 @@
 :- use_module("./stagesFunctions/functions1.pl").
 :- use_module("./stagesFunctions/functions2.pl").
 
-escolher_posicao_bot(Matriz, Player, X, Y) :-
+escolher_posicao_bot(Matriz, _, X, Y) :-
     findall((PX, PY),
         (
             nth0(PX, Matriz, Linha),
