@@ -2,6 +2,7 @@
 
 :- use_module("./src/board.pl").
 :- use_module("./src/window.pl").
+:- use_module("./src/bot.pl").
 
 movimento(w, (-1, 0)). % Para cima
 movimento(s, (1, 0)).  % Para baixo
@@ -54,23 +55,34 @@ processa_entrada(q, Matriz, X, Y, X, Y, Matriz, _, stop).
 
 processa_entrada(_, Matriz, X, Y, X, Y, Matriz, _, continuar).
 
-processa_jogada(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, Resultado, FX, FY) :-
+processa_jogada(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, Resultado, FX, FY, IsBot) :-
     window:showGameData(TotRounds, StageNum, Player, P1, P2),
     board:boardGenerate((X, Y), Matriz, 4),
-    get_single_char(Input),
-    char_code(Char, Input),
-    processa_entrada(Char, Matriz, X, Y, NX, NY, Matriz1, Player, Resultado1),
     (
-        Resultado1 = continuar ->
-            processa_jogada(Matriz1, NX, NY, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, Resultado, FX, FY)
-        ;
-        Resultado1 = marcou ->
-            NovaMatriz = Matriz1,
+        IsBot = true,
+        Player = 2 ->
+            bot:escolher_posicao_bot(Matriz, Player, NX, NY),
+            substituir_elemento(Matriz, NX, NY, (1, Player), NovaMatriz),
             Resultado = marcou,
-            FX = X,
-            FY = Y;
-        Resultado1 = stop ->
-            Resultado = stop
+            FX = NX,
+            FY = NY
+        ;
+            get_single_char(Input),
+            char_code(Char, Input),
+            processa_entrada(Char, Matriz, X, Y, NX, NY, Matriz1, Player, Resultado1),
+            (
+                Resultado1 = continuar ->
+                    processa_jogada(Matriz1, NX, NY, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, Resultado, FX, FY, IsBot)
+                ;
+                Resultado1 = marcou ->
+                    NovaMatriz = Matriz1,
+                    Resultado = marcou,
+                    FX = X,
+                    FY = Y
+                ;
+                Resultado1 = stop ->
+                    Resultado = stop
+            )
     ).
 
 formou_moinho(Matriz, Player, X, Y) :-
@@ -79,17 +91,17 @@ formou_moinho(Matriz, Player, X, Y) :-
     member((X,Y), M),
     forall(member((A,B), M), elemento_matriz(Matriz, A, B, (1, Player))).
 
-remover_peca(Matriz, (TotRounds, StageNum, Player, P1, P2), NovaMatriz) :-
+remover_peca(Matriz, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, IsBot) :-
     adversario(Player, Adversario),
     encontra_posicoes_removiveis(Matriz, Adversario, PosicoesRemoviveis),
     (
         PosicoesRemoviveis = [] ->
             encontra_todas_pecas(Matriz, Adversario, Todas),
-            [(X, Y) | _] = Todas  % Se todas forem de moinho, pega qualquer uma
+            [(X, Y) | _] = Todas
         ;
-            [(X, Y) | _] = PosicoesRemoviveis  % Começa na primeira removível
+            [(X, Y) | _] = PosicoesRemoviveis
     ),
-    processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz).
+    processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, IsBot).
 
 encontra_posicoes_removiveis(Matriz, Player, Posicoes) :-
     length(Matriz, Linhas),
@@ -126,7 +138,12 @@ escolher_posicao_para_remover([(X,Y)|_], X, Y).
 adversario(1, 2).
 adversario(2, 1).
 
-processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz) :-
+processa_remocao(Matriz, _, _, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, true) :-
+    bot:bot_jogando(Player, IsBot),
+    IsBot == true,
+    bot:remover_peca_bot(Matriz, Player, NovaMatriz), !.
+
+processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, false) :-
     adversario(Player, Adversario),
     elemento_matriz(Matriz, X, Y, Elemento),
     window:showGameData(TotRounds, StageNum, Player, P1, P2),
@@ -137,9 +154,9 @@ processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz
         movimento(Char, (DX, DY)) ->
             ( mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY),
               (NX \= X ; NY \= Y) -> 
-                processa_remocao(Matriz, NX, NY, (TotRounds, StageNum, Player, P1, P2), NovaMatriz)
+                processa_remocao(Matriz, NX, NY, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, false)
               ;
-                processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz)
+                processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, false)
             )
 
         ; Char = 'c',
@@ -153,10 +170,10 @@ processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz
                         Removiveis = [] ->
                             substituir_elemento(Matriz, X, Y, (1, 0), NovaMatriz)
                         ;
-                            processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz)
+                            processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, false)
                     )
             )
-        ; processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz)
+        ; processa_remocao(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), NovaMatriz, false)
     ).
 
 moinho([
