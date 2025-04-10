@@ -43,10 +43,10 @@ processarNavegacao(_, Opcao) :-
     menuInterativo(Opcao), !.
 
 
-processarOpcao(1) :- window:centralizarH('Iniciando novo jogo...'), newGame:startNewGame, menuInterativo(1).
-processarOpcao(2) :- window:centralizarH('Carregando jogo salvo...'), continue:continueGame, menuInterativo(1).
-processarOpcao(3) :- window:centralizarH('Exibindo histórico...'), history:tela_historico, menuInterativo(1).
-processarOpcao(4) :- window:centralizarH('Mostrando tutorial...'), tutorial:startTutorial, menuInterativo(1).
+processarOpcao(1) :- window:centralizarH('Iniciando novo jogo...'), window:limparTela, newGame:startNewGame, menuInterativo(1).
+processarOpcao(2) :- window:centralizarH('Carregando jogo salvo...'), window:limparTela, continue:continueGame, menuInterativo(1).
+processarOpcao(3) :- window:centralizarH('Exibindo histórico...'), window:limparTela, history:tela_historico, menuInterativo(1).
+processarOpcao(4) :- window:centralizarH('Mostrando tutorial...'), window:limparTela, tutorial:startTutorial, menuInterativo(1).
 processarOpcao(5) :- window:centralizarH('Saindo...'), halt.
 
 
