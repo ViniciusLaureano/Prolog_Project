@@ -3,7 +3,7 @@
 :- use_module("./src/stages.pl").
 
 saveInterruptedGame(Matrix, TotRounds, (Player, P1, P2), Phase, Mill, IsBot) :-
-  matrix_to_json(Matrix, JsonMatrix),
+    matrix_to_json(Matrix, JsonMatrix),
 	buildState(JsonMatrix, TotRounds, (Player, P1, P2), Phase, Mill, IsBot, State),
 	open("./src/json/saveGame.json", write, SaveGame),
 	json_write_dict(SaveGame, State, [width(0)]),
@@ -49,21 +49,21 @@ stageCalling(State, "Phase3") :-
 cell_to_json((X, Y), [X, Y]) :- !.
 cell_to_json(Value, Value).
 
-% Converte uma linha inteira da matriz
+% Converte uma linha inteira da matriz para JSON
 row_to_json(Row, JsonRow) :-
 	maplist(cell_to_json, Row, JsonRow).
 
-% Converte a matriz completa
+% Converte a matriz completa para JSON
 matrix_to_json(Matrix, JsonMatrix) :-
 	maplist(row_to_json, Matrix, JsonMatrix).
 
 cell_from_json([X, Y], (X, Y)) :- !.
 cell_from_json(Value, Value).
 
-% Converte linha
+% Converte linha de volta para Prolog
 row_from_json(Row, PrologRow) :-
 	maplist(cell_from_json, Row, PrologRow).
 
-% Converte matriz completa
+% Converte matriz completa de volta para Prolog
 matrix_from_json(JsonMatrix, PrologMatrix) :-
 	maplist(row_from_json, JsonMatrix, PrologMatrix).
