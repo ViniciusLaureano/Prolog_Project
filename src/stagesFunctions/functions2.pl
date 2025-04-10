@@ -91,8 +91,33 @@ adjacente((6,3), (5,3)).
 adjacente((6,6), (3,6)).
 adjacente((6,6), (6,3)).
 
+bot_jogada_stage2(Matriz, Player, NovaMatriz, Resultado, FX, FY, FormouMoinho) :-
+    encontra_pecas(Matriz, Player, Pecas),
+    include(possui_movimento(Matriz), Pecas, Moviveis),
+    random_member((OrigX, OrigY), Moviveis),
+    findall((AX, AY),
+        (
+            adjacente((OrigX, OrigY), (AX, AY)),
+            functions1:elemento_matriz(Matriz, AX, AY, (1, 0))
+        ),
+        Possiveis),
 
-processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho) :-
+    random_member((DestX, DestY), Possiveis),
+    functions1:substituir_elemento(Matriz, OrigX, OrigY, (1, 0), Temp),
+    functions1:substituir_elemento(Temp, DestX, DestY, (1, Player), NovaMatriz),
+    Resultado = marcou,
+    FX = DestX,
+    FY = DestY,
+    (functions1:formou_moinho(NovaMatriz, Player, FX, FY) -> FormouMoinho = true ; FormouMoinho = false).
+
+possui_movimento(Matriz, (X, Y)) :-
+    adjacente((X, Y), (AX, AY)),
+    functions1:elemento_matriz(Matriz, AX, AY, (1, 0)).
+
+processa_jogada_stage2(Matriz, _, _, (TotRounds, StageNum, 2, P1, P2), Estado, NovaMatriz, Resultado, FX, FY, FormouMoinho, true) :-
+    bot_jogada_stage2(Matriz, 2, NovaMatriz, Resultado, FX, FY, FormouMoinho), !.
+
+processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho, IsBot) :-
     window:showGameData(TotRounds, StageNum, Player, P1, P2),
     board:boardGenerate((X, Y), Matriz, 4),
     get_single_char(Input),
@@ -101,9 +126,9 @@ processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Esta
         functions1:movimento(Char, (DX, DY)) ->
             ( functions1:mover_ate_proximo(Matriz, X, Y, DX, DY, NX, NY),
                (NX \= X ; NY \= Y) ->
-            processa_jogada_stage2(Matriz, NX, NY, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho)
+            processa_jogada_stage2(Matriz, NX, NY, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho, IsBot)
         ;
-            processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho)
+            processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho, IsBot)
             )
     ;
         Char = 'c' ->
@@ -116,10 +141,10 @@ processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Esta
                     FX = MX,
                     FY = MY
                 ;
-                    processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho)
+                    processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho, IsBot)
             )
         ;
-            processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho)
+            processa_jogada_stage2(Matriz, X, Y, (TotRounds, StageNum, Player, P1, P2), Estado, NovaMatriz, marcou, FX, FY, FormouMoinho, IsBot)
     ).
 
 
@@ -151,14 +176,27 @@ loop_destino(Matriz, OrigX, OrigY, (TotRounds, StageNum, Player, P1, P2), Possiv
             FX = X,
             FY = Y
         ;
-        Char = 'a' ->  % Esquerda = anterior
+        Char = 'a' -> 
             I1 is (I - 1 + Len) mod Len,
             loop_destino(Matriz, OrigX, OrigY, (TotRounds, StageNum, Player, P1, P2), Possiveis, I1, Estado, NovaMatriz, Resultado, FX, FY)
         ;
-        Char = 'd' ->  % Direita = próximo
+        Char = 'd' -> 
             I1 is (I + 1) mod Len,
             loop_destino(Matriz, OrigX, OrigY, (TotRounds, StageNum, Player, P1, P2), Possiveis, I1, Estado, NovaMatriz, Resultado, FX, FY)
         ;
             loop_destino(Matriz, OrigX, OrigY, (TotRounds, StageNum, Player, P1, P2), Possiveis, I, Estado, NovaMatriz, Resultado, FX, FY)
     ).
 
+encontra_pecas(Matriz, Player, Pecas) :-
+    length(Matriz, NumLinhas),
+    nth0(0, Matriz, PrimeiraLinha),
+    length(PrimeiraLinha, NumColunas),
+    LimLin is NumLinhas - 1,
+    LimCol is NumColunas - 1,
+    findall((X, Y),
+        (
+            between(0, LimLin, X),
+            between(0, LimCol, Y),
+            functions1:elemento_matriz(Matriz, X, Y, (1, Player))
+        ),
+        Pecas).
